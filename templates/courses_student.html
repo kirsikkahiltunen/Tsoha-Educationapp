@@ -1,36 +1,21 @@
-<title>Kurssit</title>
+ <title>Kurssit</title>
 <h1>Tervetuloa OppiLinkin kurssit sivulle!</h1>
 <p>
-    Tällä sivulla näet omat kurssisi ja sen kuinka monta tehtäväpakettia olet kurssista suorittanut. Voit myös hakea kursseja kurssin tai vastuuopettajan nimellä.
+    Hei {{firstname}} {{lastname}}! Tällä sivulla näet omat kurssisi ja sen kuinka monta tehtäväpakettia olet kurssista suorittanut. Voit myös hakea kursseja kurssin nimellä.
     <p>
+        <p>Olet kirjautunut nimellä {{ session.username }}</p>
+        <a href="/logout">Kirjaudu ulos</a>
+        </p>
     <p>
-    <p>
+    Kurssien määrä: {{ count }}
+    <hr>
     <p>
     Omat kurssit:
     <p>
+    {% for course in courses %}
+    {Kurssin nimi: { course.course_name }}
+    <hr>
+    {% endfor %}
     <p>
-    C-ohjelmoinnin perusteet    suoritettu 0/0
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>
-    <p>
-    <p>
-    <p>
-    <p>
-    Johdatus 3D mallinnukseen   suoritettu 0/15
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>
-    <p>
-        <p>
-            <p>
-                <p>
-    Lineaarialgebran alkeet     suoritettu 0/10
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>
-    <p>
-        <p>
-            <p>
-                <p>
-    Sukankutomisen jatkokurssi  suoritettu 0/12 
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>   
+        <a href="/search">Hae kursseja</a>  
 
