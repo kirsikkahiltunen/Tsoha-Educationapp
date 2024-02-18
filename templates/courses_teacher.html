@@ -1,35 +1,19 @@
 <title>Kurssit</title>
 <h1>Tervetuloa OppiLinkin kurssit sivulle!</h1>
 <p>
-    Tällä sivulla näet omat kurssisi ja sen kuinka monta opiskelijaa kurssillasi on. Voit myös luoda, muokata tai poistaa kursseja.
+    Hei {{firstname}} {{lastname}}! Tällä sivulla näet omat kurssisi ja voit myös luoda, muokata tai poistaa kursseja.
     <p>
+        <p>Olet kirjautunut nimellä {{ session.username }}</p>
+        <a href="/logout">Kirjaudu ulos</a>
     <p>
-    <p>
+    Kurssien määrä: {{ count }}
+    <hr>
     <p>
     Omat kurssit:
     <p>
+    {% for course in courses %}
+    {Kurssin nimi: { course.course_name }}
+    <hr>
+    {% endfor %}
     <p>
-    Kuinka valmistua ajoissa 101    150 opiskelijaa
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>
-    <p>
-    <p>
-    <p>
-    <p>
-    Cooking for College: Quick and Healthy Meals on a Budget    203 opiskelijaa
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>
-    <p>
-        <p>
-            <p>
-                <p>
-    Puutarhanhoito 2: omien yrttien ja vihannesten kasvattaminen    70 opiskelijaa
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>
-    <p>
-        <p>
-            <p>
-                <p>
-    Sukankutomisen jatkokurssi  30 opiskelijaa 
-    <p>
-        <button onclick="window.location.href='/course'">siirry kurssialueelle</button>   
+        <a href="/new_course">Luo uusi kurssi</a>   
