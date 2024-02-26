@@ -13,9 +13,40 @@ db = SQLAlchemy(app)
 def index():
     return render_template("index.html")
 
-@app.route("/login")
+@app.route("/login", methods=["POST"])
 def login():
-    return render_template("login.html")
+    username = request.form["username"]
+    password = request.form["password"]
+
+
+    sql = text("SELECT* FROM users WHERE username=:username")
+    result = db.session.execute(sql, {"username":username})
+
+    user = result.fetchone()
+    
+
+    if not user:
+        return render_template("invaliduser.html", message="Käyttäjätunnus tai salasana väärin")
+    else:
+        hash_value = user.password
+        if check_password_hash(hash_value, password):
+            if user.user_type == "1":
+                firstname=user.firstname
+                lastname=user.lastname
+                sql_courses = text("""SELECT courses.course_name FROM courses JOIN course_enrollments ON courses.id = course_enrollments.course_id WHERE course_enrollments.user_id = :user_id""")
+                result_courses = db.session.execute(sql_courses, {"user_id": user.id})
+                courses = result_courses.fetchall()
+                return render_template("courses_student.html", firstname = firstname, lastname = lastname, username = username, courses = courses)
+            elif user.user_type == "2":
+                firstname=user.firstname
+                lastname=user.lastname
+                sql_teacher_courses = text("""SELECT courses.course_name FROM courses WHERE courses.teacher_id =:teacher_id""")
+                result_teacher_courses = db.session.execute(sql_teacher_courses, {"teacher_id": user.id})
+                courses = result_teacher_courses.fetchall()
+                return render_template("courses_teacher.html", firstname = firstname, lastname = lastname, username = username, courses = courses)
+        else:
+            return render_template("invaliduser.html")
+
 
 @app.route("/signup")
 def signup():

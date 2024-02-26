@@ -3,10 +3,15 @@
 <p>
 OppiLink on opetussovellus, jonka kautta voit osallistua verkkokurssille tai järjestää omia verkkokursseja.
 <p>
-Oletko jo OppiLinkin käyttäjä?
-<p>
-    <button onclick="window.location.href='/login'">kirjaudu sisään</button>
-<p>
-Etkö ole vielä luonut käyttäjätunnusta?
-<p>
-    <button onclick="window.location.href='/signup'">rekisteröidy käyttäjäksi</button>
+    {% if session.username %}
+    <p>Olet kirjautunut nimellä {{ session.username }}</p>
+    <a href="/logout">Kirjaudu ulos</a>
+    {% else %}
+    <form action="/login" method="POST">
+    <p>Tunnus:<br>
+    <input type="text" name="username"></p>
+    <p>Salasana:<br>
+    <input type="password" name="password"></p>
+    <input type="submit" value="Kirjaudu">
+    </form>
+    {% endif %}
