@@ -1,12 +1,16 @@
 from flask import Flask
-from flask import redirect, render_template, request
+from flask import redirect, render_template, request, session
 import re
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
+from os import getenv
+
+
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///Tsoha2"
+app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
+app.secret_key = getenv("SECRET_KEY")
 db = SQLAlchemy(app)
 
 @app.route("/")
@@ -36,14 +40,24 @@ def login():
                 sql_courses = text("""SELECT courses.course_name FROM courses JOIN course_enrollments ON courses.id = course_enrollments.course_id WHERE course_enrollments.user_id = :user_id""")
                 result_courses = db.session.execute(sql_courses, {"user_id": user.id})
                 courses = result_courses.fetchall()
-                return render_template("courses_student.html", firstname = firstname, lastname = lastname, username = username, courses = courses)
+                session["username"] = username
+                session["firstname"] = firstname
+                session["lastname"] = lastname
+                session["courses"] = courses
+                count=len(courses)
+                return render_template("courses_student.html", firstname = firstname, lastname = lastname, username = username, courses = courses, count = count)
             elif user.user_type == "2":
                 firstname=user.firstname
                 lastname=user.lastname
                 sql_teacher_courses = text("""SELECT courses.course_name FROM courses WHERE courses.teacher_id =:teacher_id""")
                 result_teacher_courses = db.session.execute(sql_teacher_courses, {"teacher_id": user.id})
                 courses = result_teacher_courses.fetchall()
-                return render_template("courses_teacher.html", firstname = firstname, lastname = lastname, username = username, courses = courses)
+                session["username"] = username
+                session["firstname"] = firstname
+                session["lastname"] = lastname
+                session["courses"] = courses
+                count=len(courses)
+                return render_template("courses_teacher.html", firstname = firstname, lastname = lastname, username = username, courses = courses, count = count)
         else:
             return render_template("invaliduser.html")
 
@@ -122,3 +136,17 @@ def signup_done():
     else:
         return render_template("invalidpassword.html")
     
+
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return redirect("/")
+
+
+@app.route("/new_course")
+def new_course():
+    return render_template("new_course.html")
+
+@app.route("/create_course")
+def create_course():
+    return render_template("new_course.html")
